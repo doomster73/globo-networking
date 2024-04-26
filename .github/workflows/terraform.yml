@@ -26,6 +26,20 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v2
 
+    # Configure Terraform CLI to use the API token from GitHub Secrets
+    - name: Configure Terraform credentials
+      run: |
+        mkdir -p $HOME/.terraform.d
+        cat > $HOME/.terraform.d/credentials.tfrc.json << EOF
+        {
+          "credentials": {
+            "app.terraform.io": {
+              "token": "${{ secrets.TF_API_TOKEN }}"
+            }
+          }
+        }
+        EOF
+
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
       id: init
